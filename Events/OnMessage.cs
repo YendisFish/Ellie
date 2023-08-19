@@ -9,7 +9,7 @@ public class MessageCreated
 {
     public static async Task Process(DiscordClient cli, MessageCreateEventArgs e)
     {
-        if(e.Message.Content.Contains("--prompt"))
+        if(e.Message.Content.Contains("--prompt="))
         {
             await Ellie.Commands.AI.PromptAI(e);
         }
@@ -36,6 +36,39 @@ public class MessageCreated
             bldr.WithEmbed(ebldr);
 
             await e.Message.RespondAsync(bldr);
+        }
+
+        if(e.Message.Content.Contains("-prompt"))
+        {
+            UserSettings setting = new(1, "test negprompt");
+            foreach(UserSettings s in Globals.userSettings)
+            {
+                if(e.Author.Id == s.id)
+                {
+                    setting = s;
+                }
+            }
+
+            await Ellie.Commands.AI.PromptAISimple(e, setting.prompt);
+        }
+
+        if(e.Message.Content.Contains("-setnegprompt"))
+        {
+            UserSettings setting = new(e.Author.Id, e.Message.Content.Split("-setnegprompt")[1].Trim());
+            
+            for(int i = 0; i < Globals.userSettings.Count; i++)
+            {
+                if(Globals.userSettings[i].id == setting.id)
+                {
+                    Globals.userSettings[i] = setting;
+
+                    File.WriteAllText("./usersettings.json", JsonConvert.SerializeObject(Globals.userSettings));
+                    return;
+                }
+            }
+
+            Globals.userSettings.Add(setting);
+            File.WriteAllText("./usersettings.json", JsonConvert.SerializeObject(Globals.userSettings));
         }
     }
 }

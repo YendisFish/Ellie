@@ -15,16 +15,6 @@ public class AI
 {
     public static async Task PromptAI(MessageCreateEventArgs ctx)
     {
-        //object[] blacklist = new object[] {"porn", "nsfw", "boob", "ass", "tits", "pussy", "vagina", "cock", "dick", "penis", "nude", "naked", "bottomless", "topless", "breast", "furry", "daddy", "mommy", "sexy", "cum", "orgasm", "semen", "baddie", "hottie", "nudity", "panties", "nipple", "titties", "butt", "bum", "pp", "gwa", "sex", "fucking", "coitus", "intercourse", "bust", "coom", "large member", "large bust", "nutted on", "nut", "white liquid", "sperm", "ejaculate", "testicle", "testies", "testys", "nips", "teet", "loli"};
-        //bool filterdms = true;
-        /*
-        How to blacklist Matthew:
-        if(ctx.Author.Id == 380526092634816542)
-        {
-            Console.WriteLine("Matthew tried to generate an image");
-            return;
-        }*/
-
         Console.WriteLine("\nGenerating Image!");
         string args = ctx.Message.Content;
 
@@ -124,7 +114,32 @@ public class AI
             Console.WriteLine("Failed to generate image!");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(e.Message);
-        }
+        }  
+    }
+
+
+    public static async Task PromptAISimple(MessageCreateEventArgs ctx, string negprompt)
+    {
+        string time = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
+        string user = ctx.Author.Id.ToString() + " " + ctx.Author.Username;
+        string output = $"{ctx.Message.Content.Split("-prompt")[1].Trim()} | {negprompt}";
         
+        Console.WriteLine($"{time} | {user}\n{output}");
+
+        Prompt p = new();
+        string[]? img = await p.SendAndGet(ctx.Message.Content.Split("-prompt")[1].Trim(), negprompt);
+
+        if(img is null) {Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("Could not generate image!"); Console.ForegroundColor = ConsoleColor.White; throw new Exception("Could not generate image!"); }
+
+        using(FileStream fs = File.OpenRead(img[0]))
+        {
+            DiscordMessageBuilder bldr = new DiscordMessageBuilder().AddFile(fs);
+            await ctx.Message.RespondAsync(bldr);
+        }
+
+        using(FileStream fs = File.OpenWrite("./log.txt")) using(StreamWriter sw = new StreamWriter(fs))
+        {
+            sw.WriteLine(output + "\n");
+        }
     }
 }
