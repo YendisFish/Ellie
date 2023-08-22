@@ -38,9 +38,9 @@ public class MessageCreated
             await e.Message.RespondAsync(bldr);
         }
 
-        if(e.Message.Content.Contains("-prompt"))
+        if(e.Message.Content.Contains("-generate"))
         {
-            UserSettings setting = new(1, "test negprompt");
+            UserSettings setting = new(1, "bad artist, bad quality, distorted");
             foreach(UserSettings s in Globals.userSettings)
             {
                 if(e.Author.Id == s.id)

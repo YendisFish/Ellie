@@ -122,12 +122,12 @@ public class AI
     {
         string time = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss");
         string user = ctx.Author.Id.ToString() + " " + ctx.Author.Username;
-        string output = $"{ctx.Message.Content.Split("-prompt")[1].Trim()} | {negprompt}";
+        string output = $"{ctx.Message.Content.Split("-generate")[1].Trim()} | {negprompt}";
         
         Console.WriteLine($"{time} | {user}\n{output}");
 
         Prompt p = new();
-        string[]? img = await p.SendAndGet(ctx.Message.Content.Split("-prompt")[1].Trim(), negprompt);
+        string[]? img = await p.SendAndGet(ctx.Message.Content.Split("-generate")[1].Trim(), negprompt);
 
         if(img is null) {Console.ForegroundColor = ConsoleColor.Red; Console.WriteLine("Could not generate image!"); Console.ForegroundColor = ConsoleColor.White; throw new Exception("Could not generate image!"); }
 

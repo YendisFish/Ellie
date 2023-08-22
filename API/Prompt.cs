@@ -18,6 +18,7 @@ public class Prompt
     public async Task<string[]?> SendAndGet(string prompt, string negative, int steps = 40, int cfg = 7, int x = 512, int y = 512, bool upscale = false, string model = "", string lora = "")
     {
         Globals.currentModel = model;
+        Console.WriteLine($"Model is: {Globals.currentModel}");
 
         HttpClient cli = new();
         

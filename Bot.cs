@@ -24,6 +24,10 @@ public class Bot
             DmHelp = false
         };
 
+        DiscordActivity activity = new DiscordActivity();
+        activity.ActivityType = ActivityType.Playing;
+        activity.Name = "Use -generate to generate images! Use --help to learn more advanced features!";
+
         CommandsNextExtension cex = client.UseCommandsNext(cconfig);
             
         //cex.RegisterCommands<Basic>();
@@ -31,6 +35,9 @@ public class Bot
         client.MessageCreated += Ellie.Events.MessageCreated.Process;
 
         await client.ConnectAsync();
+        await Task.Delay(1000);
+
+        await client.UpdateStatusAsync(activity);
         await Task.Delay(-1);
     }
 }
