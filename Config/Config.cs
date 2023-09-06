@@ -1,3 +1,3 @@
 namespace Ellie;
 
-public record Config(string token, List<string> blacklist, bool useblacklist, string defaultmodel);
+public record Config(string token, List<string> blacklist, bool useblacklist, string defaultmodel, List<ulong> adminids);
