@@ -9,6 +9,26 @@ public class MessageCreated
 {
     public static async Task Process(DiscordClient cli, MessageCreateEventArgs e)
     {
+        if(e.Message.Content.Contains("--enable"))
+        {
+            if(Globals.cfg.adminids.Contains(e.Author.Id))
+            {
+                try
+                {
+                    ulong id = ulong.Parse(e.Message.Content.Split(' ')[1]);
+
+                    Globals.disabledServers = Globals.disabledServers.Where(x => x.id != id).ToList();
+
+                    await Globals.WriteDisabled();
+                    await e.Message.RespondAsync($"Enabled {id}!");
+
+                    return;
+                } catch { return; }
+            } else {
+                await e.Message.RespondAsync("You do not have permission to do this!");
+            }
+        }
+
         foreach(DisabledServer serv in Globals.disabledServers)
         {
             if(e.Guild.Id == serv.id)
@@ -19,7 +39,7 @@ public class MessageCreated
 
         if(e.Message.Content.Contains("--disable"))
         {
-            if(Globals.cfg.adminids.Contains(e.Guild.Id))
+            if(Globals.cfg.adminids.Contains(e.Author.Id))
             {
                 try
                 {
@@ -38,29 +58,9 @@ public class MessageCreated
             }
         }
 
-        if(e.Message.Content.Contains("--enable"))
-        {
-            if(Globals.cfg.adminids.Contains(e.Guild.Id))
-            {
-                try
-                {
-                    ulong id = ulong.Parse(e.Message.Content.Split(' ')[1]);
-
-                    Globals.disabledServers = Globals.disabledServers.Where(x => x.id != id).ToList();
-
-                    await Globals.WriteDisabled();
-                    await e.Message.RespondAsync($"Enabled {id}!");
-
-                    return;
-                } catch { return; }
-            } else {
-                await e.Message.RespondAsync("You do not have permission to do this!");
-            }
-        }
-
         if(e.Message.Content.Contains("--makeadmin"))
         {
-            if(Globals.cfg.adminids.Contains(e.Guild.Id))
+            if(Globals.cfg.adminids.Contains(e.Author.Id))
             {
                 try
                 {
@@ -80,7 +80,7 @@ public class MessageCreated
 
         if(e.Message.Content.Contains("--revokeadmin"))
         {
-            if(Globals.cfg.adminids.Contains(e.Guild.Id))
+            if(Globals.cfg.adminids.Contains(e.Author.Id))
             {
                 try
                 {
