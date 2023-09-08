@@ -32,9 +32,9 @@ public class AI
 
         if(!ctx.Channel.IsPrivate)
         {
-            if(!Filter.IsSafe((string)cmdargs[0]) && Globals.cfg.useblacklist)
+            if(!Filter.IsSafe((string)cmdargs[0]) && Globals.cfg.usedenylist)
             {
-                await ctx.Message.RespondAsync($"Your request was blocked for using blacklisted words!");
+                await ctx.Message.RespondAsync($"Your request was blocked for using denylisted words!");
                 return;
             }
         }
