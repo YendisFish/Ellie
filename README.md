@@ -27,8 +27,8 @@ config.json must include this text:
 ```json
 {
     "token": "Your Discord Bot Token",
-    "blacklist": [ "Put Blacklisted Keywords Here" ],
-    "useblacklist": true,
+    "denylist": [ "Put Denylisted Keywords Here" ],
+    "usedenylist": true,
     "defaultmodel": "Name Of The Model You Want To Be Loaded By Default",
     "adminids": []
 }

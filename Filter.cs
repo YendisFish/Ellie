@@ -10,7 +10,7 @@ public static class Filter
         {
             foreach(string str in section.Split(' '))
             {
-                foreach(string word in Globals.cfg.blacklist)
+                foreach(string word in Globals.cfg.denylist)
                 {
                     if(str == word)
                     {
